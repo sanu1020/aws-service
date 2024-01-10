@@ -1,4 +1,4 @@
-import {  Controller, Get, Req, Res } from '@nestjs/common';
+import {  Controller, Get, HttpCode, HttpException, HttpStatus, Req, Res } from '@nestjs/common';
 import { AwsService } from './aws.service';
 
 @Controller('aws/log')
@@ -6,55 +6,36 @@ export class AwsController {
   constructor(private readonly awsService: AwsService) {}
 
   @Get('group')
-  async getLogGroup(
-    @Req() request,
-    @Res() response,
-  ) {
+  async getLogGroup() 
+  {
     try {
       const logs = await this.awsService.describeLogGroups();
-      return response
-      .status(200)
-      .json(logs)
+      if (logs) return logs
     } catch (error) {
-      return response
-        .status(500)
-        .json(`${error.message}`)
+      throw new HttpException(`Logs group retrival error ${error}`,HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 
   @Get('stream')
-  async getLogStream(
-    @Req() request,
-    @Res() response,
-  ){
+  async getLogStream()
+  {
     try {
-      const streams = await this.awsService.describeLogStreams();
-      return response
-      .status(200)
-      .json(streams)
-     
+          const streams = await this.awsService.describeLogStreams();
+      return streams 
     } catch (error) {
-      return response
-        .status(500)
-        .json(`${error.message}`)
+      throw new HttpException(`Log Streams retrival error ${error}`,HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 
   @Get('event')
-  async getLogEvent(
-    @Req() request,
-    @Res() response,
-  ) {
+  async getLogEvent()
+   {
     try {
       const events = await this.awsService.describeLogEvent();
-      return response
-      .status(200)
-      .json(events)
+      return events
      
     } catch (error) {
-      return response
-        .status(500)
-        .json(`${error.message}`)
+      throw new HttpException(`Log Streams retrival error ${error}`,HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 }
