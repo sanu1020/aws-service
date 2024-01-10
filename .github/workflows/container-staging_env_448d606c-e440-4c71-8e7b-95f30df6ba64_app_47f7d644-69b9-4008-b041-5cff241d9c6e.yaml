@@ -86,7 +86,7 @@ jobs:
               
         if: ${{ env.IMAGE_EXISTS_IN_ECR == 'false' }}
       - name: 'Run :: Build, tag, and push image'
-        run: docker push ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+        run: docker push ${{ env.IMAGE_NAME }}:v1.0 
         if: ${{ env.IMAGE_EXISTS_IN_ECR == 'false' }}
       - name: 'Run :: Deploy and Notify Resource Service'
         run: |2-
